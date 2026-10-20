@@ -1,6 +1,6 @@
 ### GASENTRA
 
-** An action firewall for AI agents. **GASENTRA sits between an AI bot and the tools it uses. The bot suggests an action and a set of fixed rules decides what happens: let it run, hold it for a human to approve, or block it. You don't have to change the AI model to use it.
+An action firewall for AI agents - GASENTRA sits between an AI bot and the tools it uses. The bot suggests an action and a set of fixed rules decides what happens: let it run, hold it for a human to approve, or block it. You don't have to change the AI model to use it.
 
 > Built for Dexathon 2K26. This is a work in progress and it only uses synthetic data.
 ## Why we built it
