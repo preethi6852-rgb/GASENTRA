@@ -1,0 +1,11 @@
+{
+  "sensitivity_order": ["public", "internal", "personal", "confidential"],
+  "taint_labels": ["personal", "confidential"],
+  "path_labels": {
+    "candidates/": "personal",
+    "salary/": "confidential",
+    "public/": "public",
+    "inbox/": "internal"
+  },
+  "default_label": "internal"
+}
