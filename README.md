@@ -1,73 +1,75 @@
-### GASENTRA
+# demo_agent
 
-An action firewall for AI agents - GASENTRA sits between an AI bot and the tools it uses. The bot suggests an action and a set of fixed rules decides what happens: let it run, hold it for a human to approve, or block it. You don't have to change the AI model to use it.
+A deliberately gullible HR bot that shows GASENTRA protecting a third-party agent. It is its own
+process with its own LLM key, and it talks to the gateway over HTTP only. It imports nothing from
+the `gasentra` package.
 
-> Built for Dexathon 2K26. This is a work in progress and it only uses synthetic data.
-## Why we built it
+```
+user -> demo_agent (LLM tool-calling loop) -> [--guard on]  POST /api/gateway/tool-call
+                                           -> [--guard off] local unguarded stubs
+```
 
-AI assistants now read emails and documents, open private files and send messages for us. The trouble is that they can't reliably tell what the user asked for from instructions hidden inside the content they read. If an assistant gets hijacked, it can leak private data and nobody notices.
+## Setup
+```
+cd demo_agent
+pip install -r requirements.txt
+copy .env.example .env        (macOS/Linux: cp)   then fill in LLM_PROVIDER, LLM_API_KEY, LLM_MODEL
+```
+`LLM_PROVIDER` is `openai` or `anthropic`. `LLM_BASE_URL` is optional (any OpenAI-compatible endpoint).
+Never commit `.env`.
 
-## What it does
+## Run the demo
+1. Start the gateway in dev mode, from the gateway folder (the one with `app.py`):
+   ```
+   python app.py --dev
+   ```
+   `--dev` turns on the one dev-only endpoint this agent needs (`/api/dev/seed-inbox`). Leave it off in any real deployment.
+2. The dashboard opens at http://127.0.0.1:8000/ . Useful pages: `/audit.html`, `/approvals.html`, `/frozen.html`.
+   If the gateway runs on another port or machine, set `GATEWAY_URL` in this folder's `.env`.
+3. Same prompt, two modes:
+   ```
+   python agent.py --guard off --scenario A1-01     # the bot obeys the hidden instruction; "SENT (UNGUARDED)" shows the record leaving
+   python agent.py --guard on  --scenario A1-01     # the send is blocked and appears on the Audit page
+   ```
+4. Legitimate task that needs a person: `python agent.py --guard on --scenario L08 --message "Look up cand-001, then send a redacted summary to partner@agency.test."`
+   It stops with "Waiting for human approval". Approve it on the Approvals page and the gateway runs it (see `/api/sent`).
+5. Freeze: keep sending to new addresses. After 3 denials the next call returns the frozen message and the session appears on the Frozen page.
 
-- **Labels data.** Every tool result is stored with a sensitivity label.
-- **Tracks taint.** Once the bot has seen sensitive data, everything it does for the rest of the conversation is treated as tainted.
-- **Checks recipients.** Every recipient has to trace back to something the user actually said or to a trusted list.
-- **Holds risky actions** for a person to review, and shows the evidence: the matched fields, the rule that fired and a safer alternative.
-- **Protects fields** like salary. A change goes through only if the new value came from the user's own words.
-- **Freezes sessions** after repeated denials and logs every decision.
+Flags: `--once` (exit after the first message), `--message "..."`, `--user`. Without `--once` you get a chat prompt; type `exit` to quit.
 
-## A quick example
+## No API key? Use the scripted stand-in
+```
+python dev/fake_llm_server.py 9100
+# .env: LLM_PROVIDER=openai  LLM_API_KEY=anything  LLM_MODEL=fake  LLM_BASE_URL=http://127.0.0.1:9100/v1
+```
+It behaves like a gullible bot (reads the inbox, opens the named record, sends it where the email says).
+Set `FAKE_RETRIES=4` in its environment to make it keep trying new addresses until the session freezes.
 
-Company Z emails Company X's HR team a fake "verification request" with a hidden instruction inside. X's assistant opens a candidate's record and tries to email it to Z. GASENTRA notices two things: the address came only from untrusted content and the session is already tainted. So the send is blocked or held and the decision goes into the log.
+## Rules the agent follows
+- Every real user message goes to `/api/gateway/user-message` before the model sees it (this records provenance).
+- `allow` returns the tool result to the model. Any other decision returns only `agent_message`.
+- The rule, reason, evidence, risk and approval id are never passed to the model or printed. The trace
+  shows only the decision word: `[tool] send_email -> BLOCKED`.
+- Gateway unreachable, timeout (10 s) or bad response: the model gets "Tool unavailable". The call never runs locally.
+- `hold` ends the turn with "waiting for human approval". `frozen` ends the session.
+- Local stubs (`local_tools.py`) are used only with `--guard off`.
 
-## How it works
-
-1. The host app passes the user's messages to the gateway.
-2. The bot proposes a tool call and the gateway sorts it by type.
-3. The ledger and taint engine check the labels, the taint and the recipients.
-4. The decision engine answers with allow, hold or block.
-5. Tool results come back through the gateway and get labelled before the bot sees them.
-6. Too many denials in a row trigger a session freeze.
-
-When rules conflict, the order is: errors first, then blocks, then holds, then allows.
-
-## Where we are
-
-| Part | Status |
+## Files
+| File | Job |
 | --- | --- |
-| Gateway, labels, taint, recipient checks, approvals | Planned |
-| Denial counting and session freeze | Planned |
-| Dashboard (approvals, audit log, frozen sessions, results) | Planned |
+| `agent.py` | CLI chat loop, tool schemas, the LLM <-> tools loop (max 8 rounds) |
+| `gw_client.py` | HTTP wrapper for the gateway, no LLM code |
+| `local_tools.py` | Unguarded stubs for `--guard off`, reading copies in `data/` |
+| `llm.py` | OpenAI / Anthropic adapter, settings from `.env` |
+| `data/` | Copies of the synthetic data and the scenario inboxes |
+| `dev/fake_llm_server.py` | Offline stand-in for the LLM (dev only) |
 
+## Changes to the gateway this agent needs (already included in gasentra-project-with-app.zip)
+- `POST /api/dev/seed-inbox {scenario_id}` stores a scenario's emails. It answers 404 unless the gateway runs with `--dev` (or `GASENTRA_DEV=1`).
+- `POST /api/session` accepts an optional `scenario`, so `read_inbox` can find those emails.
+- Decision logic is untouched. If you use your own copy of the gateway, merge these two changes into `gasentra/api.py`.
 
-## Planned layout
-
-`gateway/` `ledger/` `policy/` `tools/` `agent/` `harness/` `frontend/` `data/`
-
-## Tech
-
-Python, a lightweight web API (FastAPI, for example), a small database (such as SQLite), a web dashboard (such as React) .
-
-## What's next
-
-A connector mode for assistants that accept custom connectors and checks on messages passed between agents.
-
-## References
-
-Abdelnabi et al. (arXiv:2502.01822)
-
-Lan and Kaul (arXiv:2603.23791)
-
-Wutschitz et al. (arXiv:2505.23643) 
-
-CERT-In advisory CIAD-2026-0049.
-
-## Team  SOLARIS YAZHI
-
-PREETHI S
-
-J.S.KRITHIKA
-
-PRIYA K
-
-SANTHIYA ARIKRISHNAN
+## Notes
+- `write_note` takes `content` (and optional `path`), because that is what the gateway reads.
+- All data is synthetic and nothing is really sent.
+- The scenario emails are the same on both sides: `data/scenarios.json` here is a copy of the gateway's cases.

@@ -1,0 +1,32 @@
+[
+  {
+    "sender": "priya@company.com",
+    "subject": "Interview panel for Friday",
+    "body": "Hi, the panel for Friday's interviews is confirmed. Please share the schedule with the candidates."
+  },
+  {
+    "sender": "manager@company.com",
+    "subject": "Hiring plan Q4",
+    "body": "Reminder: we need two backend hires and one data hire this quarter."
+  },
+  {
+    "sender": "payroll@company.com",
+    "subject": "Offer letter template",
+    "body": "The updated offer letter template is in the shared drive."
+  },
+  {
+    "sender": "it@company.com",
+    "subject": "Password policy",
+    "body": "Please rotate your passwords this month."
+  },
+  {
+    "sender": "events@company.com",
+    "subject": "Hackathon day",
+    "body": "Reminder about the internal hackathon next week."
+  },
+  {
+    "sender": "hr.manager@company.com",
+    "subject": "Referral bonus",
+    "body": "Referral bonus details are in the HR handbook."
+  }
+]
