@@ -1,0 +1,7 @@
+{
+  "denial_limit": 3,
+  "strong_match_min_fields": 2,
+  "strong_match_min_chars": 30,
+  "update_intent_words": ["update", "change", "set", "revise", "correct", "modify", "edit", "amend", "lower", "raise", "increase", "decrease", "fix"],
+  "update_intent_targets": ["offer", "salary", "record", "cand-"]
+}

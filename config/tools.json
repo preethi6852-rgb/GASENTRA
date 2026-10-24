@@ -1,0 +1,9 @@
+{
+  "read_inbox":   {"kind": "read"},
+  "read_file":    {"kind": "read"},
+  "write_note":   {"kind": "write"},
+  "send_email":   {"kind": "outbound", "recipient_arg": "to", "content_args": ["subject", "body"]},
+  "share_file":   {"kind": "outbound", "recipient_arg": "share_with", "content_from_file": "path"},
+  "update_offer": {"kind": "field_write", "id_arg": "candidate_id", "field_arg": "field", "value_arg": "value",
+                   "protected_fields": ["offer_salary", "expected_salary"]}
+}
