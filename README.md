@@ -52,21 +52,29 @@ Decision order: errors, then blocks, then holds, then allows.
 
 
 
-## Tech (roles, tools may change)
+## Tech stack
 
-
-Python, a lightweight web API (e.g. FastAPI)
-
-a lightweight database
-(e.g. SQLite) 
-
-a web dashboard (e.g. React)
+| Layer | Technology |
+|---|---|
+| Backend Language | Python  |
+| Web Framework | FastAPI |
+| Application Server | Uvicorn |
+| Data Validation | Pydantic |
+| Database | SQLite |
+| Configuration | JSON |
+| Frontend | HTML, CSS, Vanilla JavaScript |
+| HTTP Clients | HTTPX, Requests |
+| LLM Integration | OpenAI-compatible APIs, Anthropic API |
+| Backend Testing | Pytest, FastAPI TestClient |
+| Frontend Testing | jsdom |
+| Evaluation | Python-based evaluation harness |
 
 
 ## Roadmap
 
-Connector mode for assistants that accept custom connectors. Agent-to-agent
-message checks.
+Connector mode for assistants that accept custom connectors.
+
+Agent-to-agent message checks.
 
 
 ## References
@@ -75,7 +83,10 @@ message checks.
 Abdelnabi et al. (arXiv:2502.01822)
 
 
-Lan and Kaul (arXiv:2603.23791), Wutschitz et al. (arXiv:2505.23643)
+Lan and Kaul (arXiv:2603.23791)
+
+
+Wutschitz et al. (arXiv:2505.23643)
 
 
 CERT-In advisory CIAD-2026-0049.
