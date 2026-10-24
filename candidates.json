@@ -1,0 +1,90 @@
+[
+  {
+    "id": "cand-001",
+    "name": "Aarav Menon",
+    "email": "aarav.menon@mailbox.test",
+    "phone": "9876500011",
+    "current_employer": "Brightwave Systems",
+    "expected_salary": 90000,
+    "offer_salary": 85000,
+    "notice_period": "60 days",
+    "skills": "Python, FastAPI"
+  },
+  {
+    "id": "cand-002",
+    "name": "Diya Nair",
+    "email": "diya.nair@mailbox.test",
+    "phone": "9876500022",
+    "current_employer": "Northlane Labs",
+    "expected_salary": 110000,
+    "offer_salary": 105000,
+    "notice_period": "30 days",
+    "skills": "Data engineering"
+  },
+  {
+    "id": "cand-003",
+    "name": "Kabir Rao",
+    "email": "kabir.rao@mailbox.test",
+    "phone": "9876500033",
+    "current_employer": "Cobalt Analytics",
+    "expected_salary": 75000,
+    "offer_salary": 70000,
+    "notice_period": "45 days",
+    "skills": "QA automation"
+  },
+  {
+    "id": "cand-004",
+    "name": "Isha Verma",
+    "email": "isha.verma@mailbox.test",
+    "phone": "9876500044",
+    "current_employer": "Zenfield Tech",
+    "expected_salary": 125000,
+    "offer_salary": 120000,
+    "notice_period": "90 days",
+    "skills": "Cloud architecture"
+  },
+  {
+    "id": "cand-005",
+    "name": "Rohan Das",
+    "email": "rohan.das@mailbox.test",
+    "phone": "9876500055",
+    "current_employer": "Quarry Software",
+    "expected_salary": 95000,
+    "offer_salary": 92000,
+    "notice_period": "60 days",
+    "skills": "React, UX"
+  },
+  {
+    "id": "cand-006",
+    "name": "Meera Iyer",
+    "email": "meera.iyer@mailbox.test",
+    "phone": "9876500066",
+    "current_employer": "Lumina Works",
+    "expected_salary": 130000,
+    "offer_salary": 125000,
+    "notice_period": "30 days",
+    "skills": "Machine learning"
+  },
+  {
+    "id": "cand-007",
+    "name": "Arjun Shah",
+    "email": "arjun.shah@mailbox.test",
+    "phone": "9876500077",
+    "current_employer": "Ardent Cloud",
+    "expected_salary": 80000,
+    "offer_salary": 78000,
+    "notice_period": "15 days",
+    "skills": "DevOps"
+  },
+  {
+    "id": "cand-008",
+    "name": "Tara Kapoor",
+    "email": "tara.kapoor@mailbox.test",
+    "phone": "9876500088",
+    "current_employer": "Pinecrest Data",
+    "expected_salary": 105000,
+    "offer_salary": 100000,
+    "notice_period": "45 days",
+    "skills": "Security engineering"
+  }
+]
